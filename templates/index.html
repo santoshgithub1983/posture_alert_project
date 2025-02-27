@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Posture Monitor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Posture Monitoring System</h1>
+        <img src="{{ url_for('video_feed') }}" width="640" height="480">
+        <div id="alerts"></div>
+    </div>
+
+    <script>
+        // Audio feedback
+        const alertSound = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU');
+
+        // Visual alerts
+        const alertsDiv = document.getElementById('alerts');
+
+        // Check for alerts every second
+        setInterval(() => {
+            fetch(window.location.href)
+                .then(response => response.text())
+                .then(text => {
+                    if(text.includes('Posture Alert!')) {
+                        alertSound.play();
+                        alertsDiv.innerHTML = '<div class="alert">Improper Posture Detected!</div>';
+                    } else {
+                        alertsDiv.innerHTML = '';
+                    }
+                });
+        }, 1000);
+    </script>
+</body>
+</html>
